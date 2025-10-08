@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [commandes, setCommandes] = useState([]);
+  const [commandes, setCommandes] = useState(() => {
+    // Charger les commandes depuis localStorage
+    const saved = localStorage.getItem('commandes');
+    const lastDate = localStorage.getItem('lastDate');
+    const today = new Date().toDateString();
+
+    // Si la date a changé (nouveau jour), réinitialiser
+    if (lastDate !== today) {
+      localStorage.setItem('lastDate', today);
+      localStorage.removeItem('commandes');
+      return [];
+    }
+
+    return saved ? JSON.parse(saved) : [];
+  });
   const [nouveauNom, setNouveauNom] = useState('');
   const [nouvelleFrite, setNouvelleFrite] = useState('Petite');
   const [nouvellesSauces, setNouvellesSauces] = useState([]);
@@ -65,6 +79,11 @@ function App() {
     { nom: 'Mini beemkla', prix: 4.00 },
     { nom: 'Cheese craque', prix: 3.00 }
   ];
+
+  // Sauvegarder les commandes dans localStorage à chaque changement
+  useEffect(() => {
+    localStorage.setItem('commandes', JSON.stringify(commandes));
+  }, [commandes]);
 
   const ajouterCommande = (e) => {
     e.preventDefault();
