@@ -22,6 +22,7 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   margin-bottom: 30px;
   text-align: center;
+  position: relative;
 }
 
 .App-header h1 {
@@ -313,4 +314,139 @@ h2 {
 .friterie-info strong {
   color: #008bbe;
   font-size: 1.1rem;
+}
+
+/* Admin interface */
+.btn-admin {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-admin:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.admin-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.admin-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.close-admin {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.close-admin:hover {
+  background: #c82333;
+}
+
+.admin-login {
+  text-align: center;
+  padding: 20px;
+}
+
+.admin-login h2 {
+  margin-bottom: 20px;
+}
+
+.admin-login input {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.admin-prices h3 {
+  color: #008bbe;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  border-bottom: 2px solid #008bbe;
+  padding-bottom: 5px;
+}
+
+.price-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.price-item span:first-child {
+  flex: 1;
+  font-weight: 500;
+}
+
+.price-item input {
+  width: 80px;
+  padding: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  text-align: right;
+  font-size: 1rem;
+  margin-right: 5px;
+}
+
+.price-item input:focus {
+  outline: none;
+  border-color: #008bbe;
+}
+
+.snacks-grid-admin {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .snacks-grid-admin {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-content {
+    margin: 20px;
+    max-height: 90vh;
+  }
 }

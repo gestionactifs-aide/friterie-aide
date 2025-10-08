@@ -9,71 +9,86 @@ function App() {
   const [nouvelleFrite, setNouvelleFrite] = useState('Petite');
   const [nouvellesSauces, setNouvellesSauces] = useState([]);
   const [nouveauxSnacks, setNouveauxSnacks] = useState([]);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  const taillesFrites = [
-    { nom: 'Mini', prix: 2.00 },
-    { nom: 'Petite', prix: 2.50 },
-    { nom: 'Moyenne', prix: 3.00 },
-    { nom: 'Grande', prix: 3.50 },
-    { nom: 'Spéciale +1,50€', prix: 4.50 }
-  ];
+  // États pour les prix chargés depuis Firebase
+  const [taillesFrites, setTaillesFrites] = useState([]);
+  const [sauces, setSauces] = useState([]);
+  const [snacks, setSnacks] = useState([]);
 
-  const sauces = [
-    { nom: 'Ketchup', prix: 0.90 },
-    { nom: 'Tartare', prix: 0.90 },
-    { nom: 'Mayonnaise', prix: 0.90 },
-    { nom: 'Andalouse', prix: 0.90 },
-    { nom: 'Cocktail', prix: 0.90 },
-    { nom: 'Américaine du chef', prix: 0.90 },
-    { nom: 'Samourai', prix: 0.90 },
-    { nom: 'Aïoli', prix: 0.90 },
-    { nom: 'Brazil', prix: 0.90 },
-    { nom: 'Biche', prix: 0.90 },
-    { nom: 'Ketchup curry', prix: 0.90 },
-    { nom: 'Toscane', prix: 0.90 },
-    { nom: 'Moutarde', prix: 0.90 },
-    { nom: 'Béarnaise', prix: 0.90 },
-    { nom: 'Autre doux', prix: 0.90 },
-    { nom: 'Algérienne', prix: 0.90 }
-  ];
+  // Initialiser les prix par défaut dans Firebase si inexistants
+  const initializePrices = () => {
+    const defaultFrites = [
+      { nom: 'Mini', prix: 2.00 },
+      { nom: 'Petite', prix: 2.50 },
+      { nom: 'Moyenne', prix: 3.00 },
+      { nom: 'Grande', prix: 3.50 },
+      { nom: 'Spéciale +1,50€', prix: 4.50 }
+    ];
 
-  const snacks = [
-    { nom: 'Fricadelle', prix: 1.50 },
-    { nom: 'Fricadelle spéciale', prix: 2.50 },
-    { nom: 'Fricadelle xxl', prix: 4.50 },
-    { nom: 'Fricadelle xxl spéciale', prix: 5.50 },
-    { nom: 'Cervelas', prix: 2.50 },
-    { nom: 'Cervelas spécial', prix: 3.50 },
-    { nom: 'Viandelle', prix: 2.40 },
-    { nom: 'Viandelle spéciale', prix: 3.40 },
-    { nom: 'Viandelle xl', prix: 4.00 },
-    { nom: 'Hamburger (la viande)', prix: 2.00 },
-    { nom: 'Mexicanos', prix: 2.80 },
-    { nom: 'Poulycroc', prix: 2.60 },
-    { nom: 'Poulycroc fromage', prix: 3.00 },
-    { nom: 'Brochette oignons-poivrons', prix: 4.00 },
-    { nom: 'Brochette de dinde', prix: 4.20 },
-    { nom: 'Brochette grizly', prix: 4.30 },
-    { nom: 'Brochette tzigane', prix: 3.60 },
-    { nom: 'Brochette pilon', prix: 4.60 },
-    { nom: 'Brochette ardennaise', prix: 3.70 },
-    { nom: 'Brochette de poisson', prix: 4.80 },
-    { nom: 'Croquette de fromage', prix: 3.00 },
-    { nom: 'Croquette de volaille', prix: 2.80 },
-    { nom: 'Lucifer', prix: 2.90 },
-    { nom: 'Mini lucifer', prix: 4.00 },
-    { nom: 'Boulet (lapin, provençal, tomate)', prix: 2.80 },
-    { nom: 'Boulet rôti', prix: 1.80 },
-    { nom: 'Chixfingers', prix: 3.90 },
-    { nom: 'Nuggizz', prix: 3.90 },
-    { nom: 'Mini loempia', prix: 4.00 },
-    { nom: 'Loempidel', prix: 3.00 },
-    { nom: 'Mini classics', prix: 4.80 },
-    { nom: 'Saucisse géante', prix: 3.00 },
-    { nom: 'Ragouzi', prix: 2.90 },
-    { nom: 'Cheese craque', prix: 3.00 },
-    { nom: 'Taco', prix: 3.90 }
-  ];
+    const defaultSauces = [
+      { nom: 'Ketchup', prix: 0.90 },
+      { nom: 'Tartare', prix: 0.90 },
+      { nom: 'Mayonnaise', prix: 0.90 },
+      { nom: 'Andalouse', prix: 0.90 },
+      { nom: 'Cocktail', prix: 0.90 },
+      { nom: 'Américaine du chef', prix: 0.90 },
+      { nom: 'Samourai', prix: 0.90 },
+      { nom: 'Aïoli', prix: 0.90 },
+      { nom: 'Brazil', prix: 0.90 },
+      { nom: 'Biche', prix: 0.90 },
+      { nom: 'Ketchup curry', prix: 0.90 },
+      { nom: 'Toscane', prix: 0.90 },
+      { nom: 'Moutarde', prix: 0.90 },
+      { nom: 'Béarnaise', prix: 0.90 },
+      { nom: 'Autre doux', prix: 0.90 },
+      { nom: 'Algérienne', prix: 0.90 }
+    ];
+
+    const defaultSnacks = [
+      { nom: 'Fricadelle', prix: 1.50 },
+      { nom: 'Fricadelle spéciale', prix: 2.50 },
+      { nom: 'Fricadelle xxl', prix: 4.50 },
+      { nom: 'Fricadelle xxl spéciale', prix: 5.50 },
+      { nom: 'Cervelas', prix: 2.50 },
+      { nom: 'Cervelas spécial', prix: 3.50 },
+      { nom: 'Viandelle', prix: 2.40 },
+      { nom: 'Viandelle spéciale', prix: 3.40 },
+      { nom: 'Viandelle xl', prix: 4.00 },
+      { nom: 'Hamburger (la viande)', prix: 2.00 },
+      { nom: 'Mexicanos', prix: 2.80 },
+      { nom: 'Poulycroc', prix: 2.60 },
+      { nom: 'Poulycroc fromage', prix: 3.00 },
+      { nom: 'Brochette oignons-poivrons', prix: 4.00 },
+      { nom: 'Brochette de dinde', prix: 4.20 },
+      { nom: 'Brochette grizly', prix: 4.30 },
+      { nom: 'Brochette tzigane', prix: 3.60 },
+      { nom: 'Brochette pilon', prix: 4.60 },
+      { nom: 'Brochette ardennaise', prix: 3.70 },
+      { nom: 'Brochette de poisson', prix: 4.80 },
+      { nom: 'Croquette de fromage', prix: 3.00 },
+      { nom: 'Croquette de volaille', prix: 2.80 },
+      { nom: 'Lucifer', prix: 2.90 },
+      { nom: 'Mini lucifer', prix: 4.00 },
+      { nom: 'Boulet (lapin, provençal, tomate)', prix: 2.80 },
+      { nom: 'Boulet rôti', prix: 1.80 },
+      { nom: 'Chixfingers', prix: 3.90 },
+      { nom: 'Nuggizz', prix: 3.90 },
+      { nom: 'Mini loempia', prix: 4.00 },
+      { nom: 'Loempidel', prix: 3.00 },
+      { nom: 'Mini classics', prix: 4.80 },
+      { nom: 'Saucisse géante', prix: 3.00 },
+      { nom: 'Ragouzi', prix: 2.90 },
+      { nom: 'Cheese craque', prix: 3.00 },
+      { nom: 'Taco', prix: 3.90 }
+    ];
+
+    set(ref(database, 'menu/frites'), defaultFrites);
+    set(ref(database, 'menu/sauces'), defaultSauces);
+    set(ref(database, 'menu/snacks'), defaultSnacks);
+  };
 
   // Synchronisation avec Firebase
   useEffect(() => {
@@ -98,6 +113,35 @@ function App() {
     });
 
     return () => unsubscribe();
+  }, []);
+
+  // Charger les prix depuis Firebase
+  useEffect(() => {
+    const fritesRef = ref(database, 'menu/frites');
+    const saucesRef = ref(database, 'menu/sauces');
+    const snacksRef = ref(database, 'menu/snacks');
+
+    // Charger les frites
+    onValue(fritesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        initializePrices();
+      } else {
+        setTaillesFrites(data);
+      }
+    });
+
+    // Charger les sauces
+    onValue(saucesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setSauces(data);
+    });
+
+    // Charger les snacks
+    onValue(snacksRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) setSnacks(data);
+    });
   }, []);
 
   const ajouterCommande = (e) => {
@@ -194,6 +238,34 @@ function App() {
     window.open('https://maps.app.goo.gl/wcfUEgohFHk8FALh9', '_blank');
   };
 
+  const handleAdminLogin = () => {
+    if (adminPassword === 'AIDE2025') {
+      setIsAdminAuthenticated(true);
+      setAdminPassword('');
+    } else {
+      alert('Mot de passe incorrect');
+    }
+  };
+
+  const updatePrice = (category, index, newPrice) => {
+    const price = parseFloat(newPrice);
+    if (isNaN(price)) return;
+
+    if (category === 'frites') {
+      const updated = [...taillesFrites];
+      updated[index].prix = price;
+      set(ref(database, 'menu/frites'), updated);
+    } else if (category === 'sauces') {
+      const updated = [...sauces];
+      updated[index].prix = price;
+      set(ref(database, 'menu/sauces'), updated);
+    } else if (category === 'snacks') {
+      const updated = [...snacks];
+      updated[index].prix = price;
+      set(ref(database, 'menu/snacks'), updated);
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -201,7 +273,95 @@ function App() {
           <img src={`${process.env.PUBLIC_URL}/AIDE_logo_Col.png`} alt="AIDE Logo" className="aide-logo" />
           Commande Friterie
         </h1>
+        <button
+          onClick={() => setShowAdmin(!showAdmin)}
+          className="btn-admin"
+          title="Administration des prix"
+        >
+          ⚙️
+        </button>
       </header>
+
+      {showAdmin && (
+        <div className="admin-modal">
+          <div className="admin-content">
+            <button className="close-admin" onClick={() => setShowAdmin(false)}>✕</button>
+
+            {!isAdminAuthenticated ? (
+              <div className="admin-login">
+                <h2>Administration</h2>
+                <input
+                  type="password"
+                  placeholder="Mot de passe"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+                />
+                <button onClick={handleAdminLogin} className="btn-primary">Se connecter</button>
+              </div>
+            ) : (
+              <div className="admin-prices">
+                <h2>Gestion des prix</h2>
+
+                <h3>Frites</h3>
+                {taillesFrites.map((item, index) => (
+                  <div key={index} className="price-item">
+                    <span>{item.nom}</span>
+                    <input
+                      type="number"
+                      step="0.10"
+                      value={item.prix}
+                      onChange={(e) => updatePrice('frites', index, e.target.value)}
+                    />
+                    <span>€</span>
+                  </div>
+                ))}
+
+                <h3>Sauces</h3>
+                {sauces.map((item, index) => (
+                  <div key={index} className="price-item">
+                    <span>{item.nom}</span>
+                    <input
+                      type="number"
+                      step="0.10"
+                      value={item.prix}
+                      onChange={(e) => updatePrice('sauces', index, e.target.value)}
+                    />
+                    <span>€</span>
+                  </div>
+                ))}
+
+                <h3>Snacks</h3>
+                <div className="snacks-grid-admin">
+                  {snacks.map((item, index) => (
+                    <div key={index} className="price-item">
+                      <span>{item.nom}</span>
+                      <input
+                        type="number"
+                        step="0.10"
+                        value={item.prix}
+                        onChange={(e) => updatePrice('snacks', index, e.target.value)}
+                      />
+                      <span>€</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => {
+                    setIsAdminAuthenticated(false);
+                    setShowAdmin(false);
+                  }}
+                  className="btn-primary"
+                  style={{marginTop: '20px'}}
+                >
+                  Fermer
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="container">
         <div className="form-section">
