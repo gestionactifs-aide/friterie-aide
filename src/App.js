@@ -19,53 +19,60 @@ function App() {
   ];
 
   const sauces = [
-    { nom: 'Ketchup', prix: 0.80 },
-    { nom: 'Tartare', prix: 0.80 },
-    { nom: 'Mayonnaise', prix: 0.80 },
-    { nom: 'Andalouse', prix: 0.80 },
-    { nom: 'Cocktail', prix: 0.80 },
-    { nom: 'Américaine du chef', prix: 0.80 },
-    { nom: 'Samourai', prix: 0.80 },
-    { nom: 'Aïoli', prix: 0.80 },
-    { nom: 'Brazil', prix: 0.80 },
-    { nom: 'Biche', prix: 0.80 },
-    { nom: 'Ketchup curry', prix: 0.80 },
-    { nom: 'Toscane', prix: 0.80 },
-    { nom: 'Moutarde', prix: 0.80 },
-    { nom: 'Béarnaise', prix: 0.80 },
-    { nom: 'Autre doux', prix: 0.80 },
-    { nom: 'Algérienne', prix: 0.80 }
+    { nom: 'Ketchup', prix: 0.90 },
+    { nom: 'Tartare', prix: 0.90 },
+    { nom: 'Mayonnaise', prix: 0.90 },
+    { nom: 'Andalouse', prix: 0.90 },
+    { nom: 'Cocktail', prix: 0.90 },
+    { nom: 'Américaine du chef', prix: 0.90 },
+    { nom: 'Samourai', prix: 0.90 },
+    { nom: 'Aïoli', prix: 0.90 },
+    { nom: 'Brazil', prix: 0.90 },
+    { nom: 'Biche', prix: 0.90 },
+    { nom: 'Ketchup curry', prix: 0.90 },
+    { nom: 'Toscane', prix: 0.90 },
+    { nom: 'Moutarde', prix: 0.90 },
+    { nom: 'Béarnaise', prix: 0.90 },
+    { nom: 'Autre doux', prix: 0.90 },
+    { nom: 'Algérienne', prix: 0.90 }
   ];
 
   const snacks = [
     { nom: 'Fricadelle', prix: 1.50 },
     { nom: 'Fricadelle spéciale', prix: 2.50 },
+    { nom: 'Fricadelle xxl', prix: 4.50 },
+    { nom: 'Fricadelle xxl spéciale', prix: 5.50 },
     { nom: 'Cervelas', prix: 2.50 },
     { nom: 'Cervelas spécial', prix: 3.50 },
     { nom: 'Viandelle', prix: 2.40 },
     { nom: 'Viandelle spéciale', prix: 3.40 },
+    { nom: 'Viandelle xl', prix: 4.00 },
     { nom: 'Hamburger (la viande)', prix: 2.00 },
     { nom: 'Mexicanos', prix: 2.80 },
     { nom: 'Poulycroc', prix: 2.60 },
     { nom: 'Poulycroc fromage', prix: 3.00 },
     { nom: 'Brochette oignons-poivrons', prix: 4.00 },
     { nom: 'Brochette de dinde', prix: 4.20 },
-    { nom: 'Brochette gridy', prix: 4.30 },
+    { nom: 'Brochette grizly', prix: 4.30 },
     { nom: 'Brochette tzigane', prix: 3.60 },
     { nom: 'Brochette pilon', prix: 4.60 },
     { nom: 'Brochette ardennaise', prix: 3.70 },
+    { nom: 'Brochette de poisson', prix: 4.80 },
     { nom: 'Croquette de fromage', prix: 3.00 },
     { nom: 'Croquette de volaille', prix: 2.80 },
-    { nom: 'Lucifer', prix: 2.80 },
+    { nom: 'Lucifer', prix: 2.90 },
+    { nom: 'Mini lucifer', prix: 4.00 },
     { nom: 'Boulet (lapin, provençal, tomate)', prix: 2.80 },
     { nom: 'Boulet rôti', prix: 1.80 },
-    { nom: 'Chivfingers', prix: 3.80 },
+    { nom: 'Chixfingers', prix: 3.90 },
     { nom: 'Nuggizz', prix: 3.90 },
-    { nom: 'Loempla', prix: 4.50 },
+    { nom: 'Mini loempia', prix: 4.00 },
+    { nom: 'Loempidel', prix: 3.00 },
+    { nom: 'Mini classics', prix: 4.80 },
     { nom: 'Saucisse géante', prix: 3.00 },
     { nom: 'Ragouzi', prix: 2.90 },
-    { nom: 'Mini beemkla', prix: 4.00 },
-    { nom: 'Cheese craque', prix: 3.00 }
+    { nom: 'Cheese craque', prix: 3.00 },
+    { nom: 'Taco', prix: 3.90 }
   ];
 
   // Synchronisation avec Firebase
@@ -264,7 +271,7 @@ function App() {
         </div>
 
         <div className="commandes-section">
-          <h2>Commandes ({commandes.length})</h2>
+          <h2>Commandes ({commandes.length}) - {new Date().toLocaleDateString('fr-BE')}</h2>
 
           {commandes.length === 0 ? (
             <p className="empty-message">Aucune commande pour le moment</p>
