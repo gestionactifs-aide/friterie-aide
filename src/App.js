@@ -15,7 +15,7 @@ function App() {
     { nom: 'Petite', prix: 2.50 },
     { nom: 'Moyenne', prix: 3.00 },
     { nom: 'Grande', prix: 3.50 },
-    { nom: 'Spéciale', prix: 4.50 }
+    { nom: 'Spéciale +1,50€', prix: 4.50 }
   ];
 
   const sauces = [
