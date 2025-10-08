@@ -197,9 +197,43 @@ function App() {
     }
   };
 
+  const genererRecapitulatif = () => {
+    const recap = {};
+
+    commandes.forEach(cmd => {
+      // Compter les frites
+      const friteKey = `Frites ${cmd.tailleFrite}`;
+      recap[friteKey] = (recap[friteKey] || 0) + 1;
+
+      // Compter les snacks
+      if (cmd.snacks && cmd.snacks.length > 0) {
+        cmd.snacks.forEach(snack => {
+          recap[snack.nom] = (recap[snack.nom] || 0) + 1;
+        });
+      }
+
+      // Compter les sauces
+      if (cmd.sauces && cmd.sauces.length > 0) {
+        cmd.sauces.forEach(sauce => {
+          recap[sauce.nom] = (recap[sauce.nom] || 0) + 1;
+        });
+      }
+    });
+
+    return recap;
+  };
+
   const preparerCommande = () => {
     let texteCommande = 'Bonjour,\n\nVoici notre commande :\n\n';
     let totalGeneral = 0;
+
+    // Récapitulatif groupé
+    const recap = genererRecapitulatif();
+    texteCommande += '=== RÉCAPITULATIF ===\n';
+    Object.entries(recap).forEach(([item, quantite]) => {
+      texteCommande += `${quantite}x ${item}\n`;
+    });
+    texteCommande += '\n=== DÉTAIL PAR PERSONNE ===\n\n';
 
     commandes.forEach(cmd => {
       texteCommande += `${cmd.nom} :\n`;
@@ -270,16 +304,16 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>
-          <img src={`${process.env.PUBLIC_URL}/AIDE_logo_Col.png`} alt="AIDE Logo" className="aide-logo" />
+          <img
+            src={`${process.env.PUBLIC_URL}/AIDE_logo_Col.png`}
+            alt="AIDE Logo"
+            className="aide-logo"
+            onClick={() => setShowAdmin(!showAdmin)}
+            style={{ cursor: 'pointer' }}
+            title="Cliquez pour l'administration"
+          />
           Commande Friterie
         </h1>
-        <button
-          onClick={() => setShowAdmin(!showAdmin)}
-          className="btn-admin"
-          title="Administration des prix"
-        >
-          ⚙️
-        </button>
       </header>
 
       {showAdmin && (
