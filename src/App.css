@@ -226,6 +226,21 @@ h2 {
   transform: scale(1.1);
 }
 
+.total-general {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #008bbe 0%, #00a9e0 100%);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.montant-total {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
 .actions-buttons {
   display: grid;
   grid-template-columns: 1fr;

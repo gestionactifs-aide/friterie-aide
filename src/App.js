@@ -281,6 +281,13 @@ function App() {
                 ))}
               </div>
 
+              <div className="total-general">
+                <strong>TOTAL GÉNÉRAL : </strong>
+                <span className="montant-total">
+                  {commandes.reduce((sum, cmd) => sum + cmd.total, 0).toFixed(2)}€
+                </span>
+              </div>
+
               <div className="actions-buttons">
                 <button
                   onClick={copierCommande}
