@@ -179,7 +179,6 @@ function App() {
           <img src={`${process.env.PUBLIC_URL}/AIDE_logo_Col.png`} alt="AIDE Logo" className="aide-logo" />
           Commande Friterie
         </h1>
-        <p className="subtitle">Le Coin Croquant - Ougrée</p>
       </header>
 
       <div className="container">

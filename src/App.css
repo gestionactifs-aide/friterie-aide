@@ -235,18 +235,18 @@ h2 {
 
 .btn-action {
   width: 100%;
-  padding: 15px;
+  padding: 10px 12px;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-action:hover:not(:disabled) {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .btn-action:disabled {
@@ -259,27 +259,27 @@ h2 {
 }
 
 .btn-copier {
-  background: linear-gradient(135deg, #008bbe 0%, #00a9e0 100%);
+  background: #008bbe;
 }
 
 .btn-copier:hover:not(:disabled) {
-  box-shadow: 0 5px 15px rgba(0, 139, 190, 0.4);
+  box-shadow: 0 3px 10px rgba(0, 139, 190, 0.3);
 }
 
 .btn-telephone {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: #7ecef4;
 }
 
 .btn-telephone:hover {
-  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+  box-shadow: 0 3px 10px rgba(126, 206, 244, 0.3);
 }
 
 .btn-maps {
-  background: linear-gradient(135deg, #ED8707 0%, #f5a142 100%);
+  background: #5d6e7f;
 }
 
 .btn-maps:hover {
-  box-shadow: 0 5px 15px rgba(237, 135, 7, 0.4);
+  box-shadow: 0 3px 10px rgba(93, 110, 127, 0.3);
 }
 
 .friterie-info {
