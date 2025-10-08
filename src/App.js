@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { database } from './firebase';
+import { ref, onValue, set } from 'firebase/database';
 
 function App() {
-  const [commandes, setCommandes] = useState(() => {
-    // Charger les commandes depuis localStorage
-    const saved = localStorage.getItem('commandes');
-    const lastDate = localStorage.getItem('lastDate');
-    const today = new Date().toDateString();
-
-    // Si la date a changé (nouveau jour), réinitialiser
-    if (lastDate !== today) {
-      localStorage.setItem('lastDate', today);
-      localStorage.removeItem('commandes');
-      return [];
-    }
-
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [commandes, setCommandes] = useState([]);
   const [nouveauNom, setNouveauNom] = useState('');
   const [nouvelleFrite, setNouvelleFrite] = useState('Petite');
   const [nouvellesSauces, setNouvellesSauces] = useState([]);
@@ -80,10 +68,30 @@ function App() {
     { nom: 'Cheese craque', prix: 3.00 }
   ];
 
-  // Sauvegarder les commandes dans localStorage à chaque changement
+  // Synchronisation avec Firebase
   useEffect(() => {
-    localStorage.setItem('commandes', JSON.stringify(commandes));
-  }, [commandes]);
+    const today = new Date().toDateString();
+    const commandesRef = ref(database, 'commandes');
+    const dateRef = ref(database, 'lastDate');
+
+    // Vérifier la date et réinitialiser si nécessaire
+    onValue(dateRef, (snapshot) => {
+      const lastDate = snapshot.val();
+      if (lastDate !== today) {
+        // Nouveau jour : réinitialiser les commandes
+        set(dateRef, today);
+        set(commandesRef, []);
+      }
+    });
+
+    // Écouter les changements des commandes en temps réel
+    const unsubscribe = onValue(commandesRef, (snapshot) => {
+      const data = snapshot.val();
+      setCommandes(data || []);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const ajouterCommande = (e) => {
     e.preventDefault();
@@ -104,7 +112,11 @@ function App() {
       total: total
     };
 
-    setCommandes([...commandes, nouvelleCommande]);
+    // Sauvegarder dans Firebase
+    const commandesRef = ref(database, 'commandes');
+    const nouvellesCommandes = [...commandes, nouvelleCommande];
+    set(commandesRef, nouvellesCommandes);
+
     setNouveauNom('');
     setNouvelleFrite('Petite');
     setNouvellesSauces([]);
@@ -112,7 +124,10 @@ function App() {
   };
 
   const supprimerCommande = (id) => {
-    setCommandes(commandes.filter(cmd => cmd.id !== id));
+    // Supprimer de Firebase
+    const commandesRef = ref(database, 'commandes');
+    const nouvellesCommandes = commandes.filter(cmd => cmd.id !== id);
+    set(commandesRef, nouvellesCommandes);
   };
 
   const toggleSauce = (sauce) => {
