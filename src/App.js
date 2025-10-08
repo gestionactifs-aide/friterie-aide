@@ -113,7 +113,7 @@ function App() {
   };
 
   const genererEmail = () => {
-    let texteCommande = 'Bonjour,\n\nVoici notre commande pour ce mercredi :\n\n';
+    let texteCommande = 'Bonjour,\n\nVoici notre commande :\n\n';
     let totalGeneral = 0;
 
     commandes.forEach(cmd => {
@@ -142,8 +142,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🍟 Commande Friterie AIDE</h1>
-        <p className="subtitle">Commande du mercredi</p>
+        <h1>
+          <img src={`${process.env.PUBLIC_URL}/AIDE_logo_Col.png`} alt="AIDE Logo" className="aide-logo" />
+          Commande Friterie
+        </h1>
+        <p className="subtitle">Le Coin Croquant - Ougrée</p>
       </header>
 
       <div className="container">

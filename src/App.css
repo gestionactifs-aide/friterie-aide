@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #008bbe 0%, #00a9e0 100%);
   min-height: 100vh;
 }
 
@@ -25,9 +25,18 @@ body {
 }
 
 .App-header h1 {
-  color: #667eea;
-  font-size: 2.5rem;
+  color: #008bbe;
+  font-size: 1.8rem;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.aide-logo {
+  height: 50px;
+  width: auto;
 }
 
 .subtitle {
@@ -58,7 +67,7 @@ body {
 }
 
 h2 {
-  color: #667eea;
+  color: #008bbe;
   margin-bottom: 20px;
   font-size: 1.5rem;
 }
@@ -87,7 +96,7 @@ h2 {
 .form-group input[type="text"]:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #008bbe;
 }
 
 .sauces-grid {
@@ -121,7 +130,7 @@ h2 {
 .btn-primary {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #008bbe 0%, #00a9e0 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -133,7 +142,7 @@ h2 {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(0, 139, 190, 0.4);
 }
 
 .btn-primary:active {
@@ -172,7 +181,7 @@ h2 {
 }
 
 .commande-info strong {
-  color: #667eea;
+  color: #008bbe;
   font-size: 1.1rem;
   display: block;
   margin-bottom: 5px;
