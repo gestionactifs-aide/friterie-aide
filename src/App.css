@@ -226,29 +226,76 @@ h2 {
   transform: scale(1.1);
 }
 
-.btn-email {
+.actions-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-action {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-email:hover:not(:disabled) {
+.btn-action:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
 }
 
-.btn-email:disabled {
+.btn-action:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.btn-email:active:not(:disabled) {
+.btn-action:active:not(:disabled) {
   transform: translateY(0);
+}
+
+.btn-copier {
+  background: linear-gradient(135deg, #008bbe 0%, #00a9e0 100%);
+}
+
+.btn-copier:hover:not(:disabled) {
+  box-shadow: 0 5px 15px rgba(0, 139, 190, 0.4);
+}
+
+.btn-telephone {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.btn-telephone:hover {
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-maps {
+  background: linear-gradient(135deg, #ED8707 0%, #f5a142 100%);
+}
+
+.btn-maps:hover {
+  box-shadow: 0 5px 15px rgba(237, 135, 7, 0.4);
+}
+
+.friterie-info {
+  text-align: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.friterie-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.friterie-info strong {
+  color: #008bbe;
+  font-size: 1.1rem;
 }

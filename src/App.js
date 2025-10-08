@@ -131,7 +131,7 @@ function App() {
     }
   };
 
-  const genererEmail = () => {
+  const preparerCommande = () => {
     let texteCommande = 'Bonjour,\n\nVoici notre commande :\n\n';
     let totalGeneral = 0;
 
@@ -154,8 +154,22 @@ function App() {
     texteCommande += `TOTAL GÉNÉRAL : ${totalGeneral.toFixed(2)}€\n\n`;
     texteCommande += 'Merci et à bientôt !\n\nL\'équipe AIDE';
 
-    const mailtoLink = `mailto:lecoin.croquant@example.com?subject=Commande de frites - Mercredi&body=${encodeURIComponent(texteCommande)}`;
-    window.location.href = mailtoLink;
+    return { texte: texteCommande, total: totalGeneral };
+  };
+
+  const copierCommande = () => {
+    const { texte } = preparerCommande();
+    navigator.clipboard.writeText(texte).then(() => {
+      alert('📋 Commande copiée dans le presse-papier!');
+    });
+  };
+
+  const appelFriterie = () => {
+    window.location.href = 'tel:+3243368999';
+  };
+
+  const ouvrirGoogleMaps = () => {
+    window.open('https://maps.app.goo.gl/wcfUEgohFHk8FALh9', '_blank');
   };
 
   return (
@@ -268,13 +282,35 @@ function App() {
                 ))}
               </div>
 
-              <button
-                onClick={genererEmail}
-                className="btn-email"
-                disabled={commandes.length === 0}
-              >
-                📧 Générer l'email de commande
-              </button>
+              <div className="actions-buttons">
+                <button
+                  onClick={copierCommande}
+                  className="btn-action btn-copier"
+                  disabled={commandes.length === 0}
+                >
+                  📋 Copier la commande
+                </button>
+
+                <button
+                  onClick={appelFriterie}
+                  className="btn-action btn-telephone"
+                >
+                  📞 Appeler 04 336 89 99
+                </button>
+
+                <button
+                  onClick={ouvrirGoogleMaps}
+                  className="btn-action btn-maps"
+                >
+                  🗺️ Voir l'itinéraire
+                </button>
+              </div>
+
+              <div className="friterie-info">
+                <p><strong>Le Coin Croquant</strong></p>
+                <p>Rue de Boncelles 179, 4102 Ougrée</p>
+                <p>Tél: 04 336 89 99</p>
+              </div>
             </>
           )}
         </div>
