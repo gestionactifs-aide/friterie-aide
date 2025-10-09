@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { database } from './firebase';
-import { ref, onValue, set } from 'firebase/database';
+import { ref, onValue, set, get } from 'firebase/database';
 
 function App() {
   const [commandes, setCommandes] = useState([]);
@@ -96,15 +96,43 @@ function App() {
     const commandesRef = ref(database, 'commandes');
     const dateRef = ref(database, 'lastDate');
 
-    // Vérifier la date et réinitialiser si nécessaire
-    onValue(dateRef, (snapshot) => {
-      const lastDate = snapshot.val();
-      if (lastDate !== today) {
-        // Nouveau jour : réinitialiser les commandes
-        set(dateRef, today);
-        set(commandesRef, []);
+    console.log('🔄 Initialisation Firebase, date du jour:', today);
+
+    let isInitialized = false;
+
+    // Vérification de date avec protection contre les conflits multi-instances
+    const checkDate = async () => {
+      if (isInitialized) {
+        console.log('⚠️ Initialisation déjà effectuée, ignorée');
+        return;
       }
-    });
+      isInitialized = true;
+
+      try {
+        const snapshot = await get(dateRef);
+        const lastDate = snapshot.val();
+        console.log('📅 Vérification date - Dernière:', lastDate, '| Actuelle:', today);
+
+        // Ne réinitialiser QUE si la date est vraiment différente (pas juste un décalage de format)
+        if (lastDate && lastDate !== today) {
+          console.log('🗓️ Nouveau jour détecté, réinitialisation des commandes');
+          await set(dateRef, today);
+          await set(commandesRef, []);
+          console.log('✅ Réinitialisation terminée');
+        } else if (!lastDate) {
+          // Première initialisation
+          console.log('🆕 Première initialisation de la date');
+          await set(dateRef, today);
+        } else {
+          console.log('✅ Même jour, pas de réinitialisation');
+        }
+      } catch (error) {
+        console.error('❌ Erreur vérification date:', error);
+      }
+    };
+
+    // Attendre un délai pour laisser Firebase se synchroniser
+    setTimeout(checkDate, 500);
 
     // Écouter les changements des commandes en temps réel
     const unsubscribe = onValue(commandesRef, (snapshot) => {
