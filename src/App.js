@@ -6,7 +6,7 @@ import { ref, onValue, set, get } from 'firebase/database';
 function App() {
   const [commandes, setCommandes] = useState([]);
   const [nouveauNom, setNouveauNom] = useState('');
-  const [nouvelleFrite, setNouvelleFrite] = useState('Petite');
+  const [nouvelleFrite, setNouvelleFrite] = useState('Aucune');
   const [nouvellesSauces, setNouvellesSauces] = useState([]);
   const [nouveauxSnacks, setNouveauxSnacks] = useState([]);
   const [showAdmin, setShowAdmin] = useState(false);
@@ -176,8 +176,14 @@ function App() {
     e.preventDefault();
     if (nouveauNom.trim() === '') return;
 
+    // Vérifier qu'il y a au moins une frite OU un snack
+    if (nouvelleFrite === 'Aucune' && nouveauxSnacks.length === 0) {
+      alert('⚠️ Veuillez sélectionner au moins des frites ou un snack');
+      return;
+    }
+
     const friteObj = taillesFrites.find(f => f.nom === nouvelleFrite);
-    const totalFrite = friteObj ? friteObj.prix : 0;
+    const totalFrite = (friteObj && nouvelleFrite !== 'Aucune') ? friteObj.prix : 0;
     const totalSauces = nouvellesSauces.reduce((sum, s) => sum + s.prix, 0);
     const totalSnacks = nouveauxSnacks.reduce((sum, s) => sum + s.prix, 0);
     const total = totalFrite + totalSauces + totalSnacks;
@@ -197,7 +203,7 @@ function App() {
     set(commandesRef, nouvellesCommandes);
 
     setNouveauNom('');
-    setNouvelleFrite('Petite');
+    setNouvelleFrite('Aucune');
     setNouvellesSauces([]);
     setNouveauxSnacks([]);
   };
@@ -217,21 +223,32 @@ function App() {
     }
   };
 
-  const toggleSnack = (snack) => {
-    if (nouveauxSnacks.find(s => s.nom === snack.nom)) {
-      setNouveauxSnacks(nouveauxSnacks.filter(s => s.nom !== snack.nom));
-    } else {
-      setNouveauxSnacks([...nouveauxSnacks, snack]);
+  const ajouterSnack = (snack) => {
+    setNouveauxSnacks([...nouveauxSnacks, snack]);
+  };
+
+  const retirerSnack = (snack) => {
+    const index = nouveauxSnacks.findIndex(s => s.nom === snack.nom);
+    if (index !== -1) {
+      const updated = [...nouveauxSnacks];
+      updated.splice(index, 1);
+      setNouveauxSnacks(updated);
     }
+  };
+
+  const getSnackQuantite = (snack) => {
+    return nouveauxSnacks.filter(s => s.nom === snack.nom).length;
   };
 
   const genererRecapitulatif = () => {
     const recap = {};
 
     commandes.forEach(cmd => {
-      // Compter les frites
-      const friteKey = `Frites ${cmd.tailleFrite}`;
-      recap[friteKey] = (recap[friteKey] || 0) + 1;
+      // Compter les frites (sauf si "Aucune")
+      if (cmd.tailleFrite && cmd.tailleFrite !== 'Aucune') {
+        const friteKey = `Frites ${cmd.tailleFrite}`;
+        recap[friteKey] = (recap[friteKey] || 0) + 1;
+      }
 
       // Compter les snacks
       if (cmd.snacks && cmd.snacks.length > 0) {
@@ -265,10 +282,21 @@ function App() {
 
     commandes.forEach(cmd => {
       texteCommande += `${cmd.nom} :\n`;
-      texteCommande += `  - Frites ${cmd.tailleFrite}\n`;
+
+      if (cmd.tailleFrite && cmd.tailleFrite !== 'Aucune') {
+        texteCommande += `  - Frites ${cmd.tailleFrite}\n`;
+      }
 
       if (cmd.snacks && cmd.snacks.length > 0) {
-        texteCommande += `  - Snacks : ${cmd.snacks.map(s => s.nom).join(', ')}\n`;
+        // Grouper les snacks par nom avec leur quantité
+        const snacksGroupes = {};
+        cmd.snacks.forEach(s => {
+          snacksGroupes[s.nom] = (snacksGroupes[s.nom] || 0) + 1;
+        });
+        const snacksTexte = Object.entries(snacksGroupes)
+          .map(([nom, qty]) => qty > 1 ? `${qty}x ${nom}` : nom)
+          .join(', ');
+        texteCommande += `  - Snacks : ${snacksTexte}\n`;
       }
 
       if (cmd.sauces && cmd.sauces.length > 0) {
@@ -300,6 +328,10 @@ function App() {
     window.open('https://maps.app.goo.gl/wcfUEgohFHk8FALh9', '_blank');
   };
 
+  const ouvrirFacebook = () => {
+    window.open('https://www.facebook.com/y.fernandez.y/photos', '_blank');
+  };
+
   const handleAdminLogin = () => {
     if (adminPassword === 'AIDE2025') {
       setIsAdminAuthenticated(true);
@@ -324,6 +356,24 @@ function App() {
     } else if (category === 'snacks') {
       const updated = [...snacks];
       updated[index].prix = price;
+      set(ref(database, 'menu/snacks'), updated);
+    }
+  };
+
+  const updateName = (category, index, newName) => {
+    if (!newName || newName.trim() === '') return;
+
+    if (category === 'frites') {
+      const updated = [...taillesFrites];
+      updated[index].nom = newName.trim();
+      set(ref(database, 'menu/frites'), updated);
+    } else if (category === 'sauces') {
+      const updated = [...sauces];
+      updated[index].nom = newName.trim();
+      set(ref(database, 'menu/sauces'), updated);
+    } else if (category === 'snacks') {
+      const updated = [...snacks];
+      updated[index].nom = newName.trim();
       set(ref(database, 'menu/snacks'), updated);
     }
   };
@@ -363,14 +413,21 @@ function App() {
               </div>
             ) : (
               <div className="admin-prices">
-                <h2>Gestion des prix</h2>
+                <h2>Gestion des prix et noms</h2>
 
                 <h3>Frites</h3>
                 {taillesFrites.map((item, index) => (
-                  <div key={index} className="price-item">
-                    <span>{item.nom}</span>
+                  <div key={index} className="price-item-full">
+                    <input
+                      type="text"
+                      className="admin-name-input"
+                      value={item.nom}
+                      onChange={(e) => updateName('frites', index, e.target.value)}
+                      placeholder="Nom"
+                    />
                     <input
                       type="number"
+                      className="admin-price-input"
                       step="0.10"
                       value={item.prix}
                       onChange={(e) => updatePrice('frites', index, e.target.value)}
@@ -381,10 +438,17 @@ function App() {
 
                 <h3>Sauces</h3>
                 {sauces.map((item, index) => (
-                  <div key={index} className="price-item">
-                    <span>{item.nom}</span>
+                  <div key={index} className="price-item-full">
+                    <input
+                      type="text"
+                      className="admin-name-input"
+                      value={item.nom}
+                      onChange={(e) => updateName('sauces', index, e.target.value)}
+                      placeholder="Nom"
+                    />
                     <input
                       type="number"
+                      className="admin-price-input"
                       step="0.10"
                       value={item.prix}
                       onChange={(e) => updatePrice('sauces', index, e.target.value)}
@@ -396,10 +460,17 @@ function App() {
                 <h3>Snacks</h3>
                 <div className="snacks-grid-admin">
                   {snacks.map((item, index) => (
-                    <div key={index} className="price-item">
-                      <span>{item.nom}</span>
+                    <div key={index} className="price-item-full">
+                      <input
+                        type="text"
+                        className="admin-name-input"
+                        value={item.nom}
+                        onChange={(e) => updateName('snacks', index, e.target.value)}
+                        placeholder="Nom"
+                      />
                       <input
                         type="number"
+                        className="admin-price-input"
                         step="0.10"
                         value={item.prix}
                         onChange={(e) => updatePrice('snacks', index, e.target.value)}
@@ -441,11 +512,12 @@ function App() {
             </div>
 
             <div className="form-group">
-              <label>Taille des frites :</label>
+              <label>Taille des frites (optionnel) :</label>
               <select
                 value={nouvelleFrite}
                 onChange={(e) => setNouvelleFrite(e.target.value)}
               >
+                <option value="Aucune">Aucune - 0.00€</option>
                 {taillesFrites.map(taille => (
                   <option key={taille.nom} value={taille.nom}>
                     {taille.nom} - {taille.prix.toFixed(2)}€
@@ -456,17 +528,33 @@ function App() {
 
             <div className="form-group">
               <label>Snacks (optionnel) :</label>
-              <div className="sauces-grid">
-                {snacks.map(snack => (
-                  <label key={snack.nom} className="sauce-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={nouveauxSnacks.find(s => s.nom === snack.nom)}
-                      onChange={() => toggleSnack(snack)}
-                    />
-                    {snack.nom} ({snack.prix.toFixed(2)}€)
-                  </label>
-                ))}
+              <div className="snacks-counter-grid">
+                {snacks.map(snack => {
+                  const quantite = getSnackQuantite(snack);
+                  return (
+                    <div key={snack.nom} className="snack-counter">
+                      <span className="snack-name">{snack.nom} ({snack.prix.toFixed(2)}€)</span>
+                      <div className="counter-controls">
+                        <button
+                          type="button"
+                          onClick={() => retirerSnack(snack)}
+                          disabled={quantite === 0}
+                          className="btn-counter"
+                        >
+                          −
+                        </button>
+                        <span className="counter-value">{quantite}</span>
+                        <button
+                          type="button"
+                          onClick={() => ajouterSnack(snack)}
+                          className="btn-counter"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -505,9 +593,23 @@ function App() {
                     <div className="commande-info">
                       <strong>{cmd.nom}</strong>
                       <div className="commande-details">
-                        Frites {cmd.tailleFrite}
+                        {cmd.tailleFrite && cmd.tailleFrite !== 'Aucune' && (
+                          <span>Frites {cmd.tailleFrite}</span>
+                        )}
                         {cmd.snacks && cmd.snacks.length > 0 && (
-                          <span className="snacks-text"> + {cmd.snacks.map(s => s.nom).join(', ')}</span>
+                          <span className="snacks-text">
+                            {cmd.tailleFrite && cmd.tailleFrite !== 'Aucune' ? ' + ' : ''}
+                            {(() => {
+                              // Grouper les snacks par nom avec leur quantité
+                              const snacksGroupes = {};
+                              cmd.snacks.forEach(s => {
+                                snacksGroupes[s.nom] = (snacksGroupes[s.nom] || 0) + 1;
+                              });
+                              return Object.entries(snacksGroupes)
+                                .map(([nom, qty]) => qty > 1 ? `${qty}x ${nom}` : nom)
+                                .join(', ');
+                            })()}
+                          </span>
                         )}
                         {cmd.sauces && cmd.sauces.length > 0 && (
                           <span className="sauces-text"> + {cmd.sauces.map(s => s.nom).join(', ')}</span>
@@ -553,6 +655,13 @@ function App() {
                   className="btn-action btn-maps"
                 >
                   🗺️ Voir l'itinéraire
+                </button>
+
+                <button
+                  onClick={ouvrirFacebook}
+                  className="btn-action btn-facebook"
+                >
+                  👍 Page Facebook
                 </button>
               </div>
 
