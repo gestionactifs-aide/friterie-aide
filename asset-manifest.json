@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/friterie-aide/static/css/main.3b0247da.css",
-    "main.js": "/friterie-aide/static/js/main.97e801c4.js",
+    "main.css": "/friterie-aide/static/css/main.e3f4afd3.css",
+    "main.js": "/friterie-aide/static/js/main.b5b0b939.js",
     "static/js/488.ce54221d.chunk.js": "/friterie-aide/static/js/488.ce54221d.chunk.js",
     "index.html": "/friterie-aide/index.html",
-    "main.3b0247da.css.map": "/friterie-aide/static/css/main.3b0247da.css.map",
-    "main.97e801c4.js.map": "/friterie-aide/static/js/main.97e801c4.js.map",
+    "main.e3f4afd3.css.map": "/friterie-aide/static/css/main.e3f4afd3.css.map",
+    "main.b5b0b939.js.map": "/friterie-aide/static/js/main.b5b0b939.js.map",
     "488.ce54221d.chunk.js.map": "/friterie-aide/static/js/488.ce54221d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3b0247da.css",
-    "static/js/main.97e801c4.js"
+    "static/css/main.e3f4afd3.css",
+    "static/js/main.b5b0b939.js"
   ]
 }
