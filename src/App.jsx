@@ -16,7 +16,7 @@ function App() {
   const [taillesFrites, setTaillesFrites] = useState([]);
   const [sauces, setSauces] = useState([]);
   const [snacks, setSnacks] = useState([]);
-
+  
   const initializePrices = () => {
     const defaultFrites = [
       { nom: 'Mini', prix: 2.00 },
@@ -341,6 +341,9 @@ function App() {
 
   return (
     <div className="App">
+      <div className="update-banner">
+        <span>Mise à jour v2.0 : Les commandes ne disparaissent plus !</span>
+      </div>
       <header className="App-header">
         <h1>
           <img

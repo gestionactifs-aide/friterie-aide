@@ -15,6 +15,34 @@ body {
   padding: 20px;
 }
 
+.update-banner {
+  background: linear-gradient(135deg, #5d6e7f 0%, #7a8a9a 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(93, 110, 127, 0.3);
+  font-weight: 500;
+}
+
+.banner-close {
+  background: white;
+  color: #5d6e7f;
+  border: none;
+  padding: 6px 15px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.banner-close:hover {
+  transform: scale(1.05);
+}
+
 .App-header {
   background: white;
   padding: 30px;
@@ -92,6 +120,15 @@ h2 {
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  background-color: white;
+  color: #333;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group select {
+  -webkit-appearance: menulist;
+  appearance: menulist;
 }
 
 .form-group input[type="text"]:focus,
@@ -126,6 +163,12 @@ h2 {
   width: 18px;
   height: 18px;
   cursor: pointer;
+  accent-color: #008bbe;
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+  background-color: white;
+  border: 2px solid #008bbe;
+  border-radius: 3px;
 }
 
 /* Styles pour les compteurs de snacks */
